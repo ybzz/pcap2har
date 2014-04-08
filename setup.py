@@ -14,6 +14,7 @@ setup(
 
     install_requires=[
         "chardet",
+        "beautifulsoup4",
         "dpkt-fix",
     ],
 
