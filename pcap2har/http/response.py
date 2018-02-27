@@ -1,7 +1,7 @@
 import gzip
 import zlib
 import cStringIO
-from base64 import encodestring as b64encode
+from base64 import b64encode
 import logging
 
 from .. import dpkt_http_replacement as dpkt_http
