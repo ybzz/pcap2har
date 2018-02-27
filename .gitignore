@@ -4,3 +4,6 @@ pcap2har.log
 tests/*.har
 tests/*.log
 *.sw[op]
+build
+*.egg-info
+*.egg
