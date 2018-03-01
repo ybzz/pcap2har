@@ -154,9 +154,9 @@ class Response(message.Message):
                     # right thing.
                     dammit = UnicodeDammit(self.body, override_encodings)
                     # if unicode was found
-                    if dammit.unicode:
-                        self.text = dammit.unicode
-                        self.originalEncoding = dammit.originalEncoding
+                    if dammit.unicode_markup:
+                        self.text = dammit.unicode_markup
+                        self.originalEncoding = dammit.original_encoding
                     else:
                         # unicode could not be decoded, at all
                         # HAR can't write data, but body might still

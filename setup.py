@@ -13,9 +13,9 @@ setup(
     package_dir={'': '.'},
 
     install_requires=[
-        "chardet",
-        "beautifulsoup4",
-        "dpkt-fix",
+        "chardet>=3.0.4",
+        "beautifulsoup4>=4.6.0",
+        "dpkt>=1.9.1",
     ],
 
     entry_points={
