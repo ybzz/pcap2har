@@ -6,6 +6,7 @@ HAR file.
 from datetime import datetime
 import dpkt
 import logging
+import socket
 
 from pcaputil import ms_from_dpkt_time, ms_from_dpkt_time_diff
 from pagetracker import PageTracker
@@ -31,7 +32,7 @@ class Entry(object):
     * time_receiving
     '''
 
-    def __init__(self, request, response):
+    def __init__(self, request, response, client_addr, remote_addr):
         self.request = request
         self.response = response
         self.pageref = None
@@ -60,6 +61,14 @@ class Entry(object):
             self.time_receiving = -1
             self.total_time = -1
 
+        self.serverIPAddress = None
+        # First try ipv4 and then ipv6
+        try:
+            self.serverIPAddress = socket.inet_ntop(socket.AF_INET, remote_addr[0])
+        except ValueError:
+            self.serverIPAddress = socket.inet_ntop(socket.AF_INET6, remote_addr[0])
+
+
     def json_repr(self):
         '''
         return a JSON serializable python object representation of self.
@@ -68,6 +77,7 @@ class Entry(object):
             'time': self.total_time,
             'request': self.request,
             'response': self.response,
+            'serverIPAddress': self.serverIPAddress,
             'timings': {
                 'blocked': self.time_blocked,
                 'dns': self.time_dnsing,
@@ -166,7 +176,7 @@ class HttpSession(object):
         )
         # iter through messages and do important stuff
         for msg in pairs:
-            entry = Entry(msg.request, msg.response)
+            entry = Entry(msg.request, msg.response, msg.clientAddr, msg.remoteAddr)
             # if msg.request has a user-agent, add it to our list
             if 'user-agent' in msg.request.msg.headers:
                 self.user_agents.add(msg.request.msg.headers['user-agent'])
