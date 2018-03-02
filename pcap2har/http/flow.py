@@ -25,8 +25,10 @@ class Flow(object):
         tcpflow = tcp.Flow
         '''
         # try parsing it with forward as request dir
+        clientAddr, remoteAddr = tcpflow.socket
         success, requests, responses = parse_streams(tcpflow.fwd, tcpflow.rev)
         if not success:
+            remoteAddr, clientAddr = tcpflow.socket
             success, requests, responses = parse_streams(tcpflow.rev, tcpflow.fwd)
             if not success:
                 # flow is not HTTP
@@ -73,7 +75,7 @@ class Flow(object):
                 connected = True
             else:
                 req.ts_connect = req.ts_start
-            self.pairs.append(MessagePair(req, resp))
+            self.pairs.append(MessagePair(req, resp, clientAddr, remoteAddr))
 
 
 class MessagePair(object):
@@ -82,9 +84,11 @@ class MessagePair(object):
     a HAR entry.
     '''
 
-    def __init__(self, request, response):
+    def __init__(self, request, response, clientAddr, remoteAddr):
         self.request = request
         self.response = response
+        self.clientAddr = clientAddr
+        self.remoteAddr = remoteAddr
 
 
 def gather_messages(MessageClass, tcpdir):
