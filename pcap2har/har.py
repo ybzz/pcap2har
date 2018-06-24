@@ -43,6 +43,7 @@ def HTTPRequestJsonRepr(self):
         'headersSize': -1,
         'headers': header_json_repr(self.msg.headers),
         'bodySize': len(self.msg.body),
+        'postData': self.postData,
     }
 http.Request.json_repr = HTTPRequestJsonRepr
 
